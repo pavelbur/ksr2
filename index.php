@@ -1,21 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>guest_book</title>
+</head>
+<form method="GET" action="index.php">
+    <input type="text" name="name">
+    <br>
+    <input type="text" name="text">
+    <br>
+    <input type="submit">
+</form>
+</html>
 <?php
-/**
- * Created by PhpStorm.
- * User: sten
- * Date: 05.07.15
- * Time: 14:33
- */
-Class DB{
-    protected $link;
-    public function __construct($host,$login,$pass,$nameDB){
-      $this->link =  mysqli_connect($host,$login,$pass,$nameDB);
-    }
-    public function showUser(){
-       $row = mysqli_query($this->link ,'SELECT * FROM people');
-        while($res = mysqli_fetch_array($row)){
-            echo $res['name'].'<br>';
-        }
+//var_dump($_GET['name']);
+function addInDb(){
+    $name=$_GET['name'];
+    $text=$_GET['text'];
+    $DB = new PDO('mysql:host=localhost;dbname=gb', 'root', 'sten');
+
+    $DB->exec("INSERT INTO message (name,text) VALUES ($name,$text)");
+
+    $query="SELECT * FROM message";
+    $result = $DB->query($query, PDO::FETCH_ASSOC);
+    foreach ($result as $row) {
+        echo $row['id'].' '.$row['name'].' '.$row['text'].'<br/>';
     }
 }
-$a = new DB('localhost','root','sten','test');
-$a->showUser();
+
+addInDb();
