@@ -6,17 +6,10 @@
  * Time: 14:33
  */
 Class BD{
-    public $host;
-    public $login;
-    public $password;
     public $nameDB;
-
-    public function __construct($host,$name,$pass,$nameDB){
-        $this->host=$host;
-        $this->login=$name;
-        $this->password=$pass;
+    public function __construct($host,$login,$pass,$nameDB){
         $this->nameDB=$nameDB;
-        mysql_connect($this->host,$this->login,$this->password);
+        mysql_connect($host,$login,$pass);
     }
     public function testConnection(){
         $res=mysql_select_db($this->nameDB);
