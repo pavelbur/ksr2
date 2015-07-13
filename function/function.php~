@@ -6,12 +6,15 @@
  * @return int
  */
 $y =mysqli_connect("localhost","root",'',"news");
-function check($get=1){
-    if($get==0)
-        $get=1;
-    else
-        $get=abs((int)$get);
-    return $get;
+function check(){
+    if(!isset($_GET['page'])){
+        $_GET['page']=1;
+    }
+    if(isset($_GET['page'])){
+        $_GET['page']=abs((int)$_GET['page']);
+    }
+    $x=$_GET['page'];
+    return $x;
 }
 
 function view($v,$y){
@@ -27,11 +30,14 @@ function view($v,$y){
     }
 }
 function paginator ($y){
-    $x= "SELECT COUNT(*) FROM msg ";
+    $x= "SELECT * FROM msg ";
     $z=mysqli_query($y,$x);
-    $data=mysqli_fetch_assoc($z);
-    $j=ceil(($data['COUNT(*)'])/10);
-    for($i=1;$i<=$j;$i++){
+    $i=0;
+    while ($a = mysqli_fetch_array($z)){
+        $i++;
+    }
+    $j=ceil($i/10);
+    for($i=1;$i<$j;$i++){
 
         echo '<a href="?page='.$i.'">'.$i.'</a>&nbsp;&nbsp;';
     }
@@ -39,24 +45,29 @@ function paginator ($y){
 
 
 function viewNews($y,$id=1){
-    if($_GET['id']<=0 or $_GET['id']>allMsg($y)){
+    if(!isset($_GET['id'])){
+        $_GET['id']=1;
+    }
+    if(isset($_GET['id'])){
+        $_GET['id']=abs((int)$_GET['id']);
+    }
+    if(is_integer($_GET['id']))
+    $id=$_GET['id'];
+    else
+        $id=1;
+
+
+$x = "SELECT * FROM msg WHERE id=$id";
+    $z=mysqli_query($y,$x);
+$l=count(mysqli_fetch_array($z));
+    while ($a = mysqli_fetch_array($z)){
+        echo $a['title'].'<br><br>';
+        echo $a['msgs'].'<br>';
+
+
+    }
+    if($_GET['id']==0){
         echo 'ERROR';
     }
-    else{
-        $x = "SELECT * FROM msg WHERE id=$id";
-        $z=mysqli_query($y,$x);
-        $a = mysqli_fetch_array($z); {
-            echo $a['title'] . '<br><br>';
-            echo $a['msgs'] . '<br>';
-
-        }
-    }
-
-}
-function allMsg($y){
-    $x= "SELECT COUNT(*) FROM msg ";
-    $z=mysqli_query($y,$x);
-    $data=mysqli_fetch_array($z);
-    $x=(int)$data['0'];
-    return $x;
+    var_dump($l);
 }

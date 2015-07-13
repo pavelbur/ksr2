@@ -7,8 +7,8 @@
 <body>
 <?php
 include __DIR__.'../function/function.php';
-viewNews($y);
-var_dump($_GET);
+viewNews($y,$_GET['id']);
+
 ?>
 </body>
 </html>
